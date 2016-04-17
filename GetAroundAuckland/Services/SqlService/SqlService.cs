@@ -15,7 +15,10 @@ namespace GetAroundAuckland.Services.SqlService
         public readonly string CONNECTION_STRING = ConfigurationManager.ConnectionStrings["connString"].ConnectionString;
 
         private bool Add<T>(List<T> rows, string selectSql, string insertSql, string updateSql) where T : DbModel
-        {            
+        {
+            if (rows == null)
+                return false;
+
             using (var conn = new SqlConnection(CONNECTION_STRING))
             {
                 try
@@ -101,6 +104,90 @@ namespace GetAroundAuckland.Services.SqlService
             stopWatch.Start();
 
             var result = Add(calendars, Calendar.SelectSql, Calendar.InsertSql, Calendar.UpdateSql);
+
+            stopWatch.Stop();
+            Logger.Info("Finished Insert.");
+            Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
+            return result;
+        }
+
+        public bool AddCalendarDates(List<CalendarDate> calendarDates)
+        {
+            var stopWatch = new Stopwatch();
+            Logger.Info("Inserting Calendar Dates");
+            stopWatch.Start();
+
+            var result = Add(calendarDates, CalendarDate.SelectSql, CalendarDate.InsertSql, CalendarDate.UpdateSql);
+
+            stopWatch.Stop();
+            Logger.Info("Finished Insert.");
+            Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
+            return result;
+        }
+
+        public bool AddRoutes(List<Route> routes)
+        {
+            var stopWatch = new Stopwatch();
+            Logger.Info("Inserting Routes");
+            stopWatch.Start();
+
+            var result = Add(routes, Route.SelectSql, Route.InsertSql, Route.UpdateSql);
+
+            stopWatch.Stop();
+            Logger.Info("Finished Insert.");
+            Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
+            return result;
+        }
+
+        public bool AddShapes(List<Shape> shapes)
+        {
+            var stopWatch = new Stopwatch();
+            Logger.Info("Inserting Shapes");
+            stopWatch.Start();
+
+            var result = Add(shapes, Shape.SelectSql, Shape.InsertSql, Shape.UpdateSql);
+
+            stopWatch.Stop();
+            Logger.Info("Finished Insert.");
+            Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
+            return result;
+        }
+
+        public bool AddStops(List<Stop> stops)
+        {
+            var stopWatch = new Stopwatch();
+            Logger.Info("Inserting Stops");
+            stopWatch.Start();
+
+            var result = Add(stops, Stop.SelectSql, Stop.InsertSql, Stop.UpdateSql);
+
+            stopWatch.Stop();
+            Logger.Info("Finished Insert.");
+            Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
+            return result;
+        }
+
+        public bool AddStopTimes(List<StopTime> stopTimes)
+        {
+            var stopWatch = new Stopwatch();
+            Logger.Info("Inserting Trips");
+            stopWatch.Start();
+
+            var result = Add(stopTimes, StopTime.SelectSql, StopTime.InsertSql, StopTime.UpdateSql);
+
+            stopWatch.Stop();
+            Logger.Info("Finished Insert.");
+            Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
+            return result;
+        }
+
+        public bool AddTrips(List<Trip> trips)
+        {
+            var stopWatch = new Stopwatch();
+            Logger.Info("Inserting Trips");
+            stopWatch.Start();
+
+            var result = Add(trips, Trip.SelectSql, Trip.InsertSql, Trip.UpdateSql);
 
             stopWatch.Stop();
             Logger.Info("Finished Insert.");

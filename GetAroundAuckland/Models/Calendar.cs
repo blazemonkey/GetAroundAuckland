@@ -19,13 +19,13 @@ namespace GetAroundAuckland.Models
         public string ServiceId { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
-        public int Monday { get; set; }
-        public int Tuesday { get; set; }
-        public int Wednesday { get; set; }
-        public int Thursday { get; set; }
-        public int Friday { get; set; }
-        public int Saturday { get; set; }
-        public int Sunday { get; set; }
+        public bool Monday { get; set; }
+        public bool Tuesday { get; set; }
+        public bool Wednesday { get; set; }
+        public bool Thursday { get; set; }
+        public bool Friday { get; set; }
+        public bool Saturday { get; set; }
+        public bool Sunday { get; set; }
 
         public override void SetSqlParameters(SqlCommand command, string type)
         {
@@ -80,13 +80,13 @@ namespace GetAroundAuckland.Models
             row.ServiceId = reader.GetString(0).TrimEnd();
             row.StartDate = reader.GetString(1).TrimEnd();
             row.EndDate = reader.GetString(2).TrimEnd();
-            row.Monday = reader.GetByte(3);
-            row.Tuesday = reader.GetByte(3);
-            row.Wednesday = reader.GetByte(3);
-            row.Thursday = reader.GetByte(3);
-            row.Friday = reader.GetByte(3);
-            row.Saturday = reader.GetByte(3);
-            row.Sunday = reader.GetByte(3);
+            row.Monday = reader.GetBoolean(3);
+            row.Tuesday = reader.GetBoolean(3);
+            row.Wednesday = reader.GetBoolean(3);
+            row.Thursday = reader.GetBoolean(3);
+            row.Friday = reader.GetBoolean(3);
+            row.Saturday = reader.GetBoolean(3);
+            row.Sunday = reader.GetBoolean(3);
 
             if (calendar.StartDate != row.StartDate || calendar.EndDate != row.EndDate || calendar.Monday != row.Monday || calendar.Tuesday != row.Tuesday || calendar.Wednesday != row.Wednesday 
                 || calendar.Thursday != row.Thursday || calendar.Friday != row.Friday || calendar.Saturday != row.Saturday || calendar.Sunday != row.Sunday)
