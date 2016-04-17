@@ -7,8 +7,8 @@
     <ProjectGuid>{DB70D6DD-0082-4010-9659-0F83773A9A80}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GetAroundAuckland</RootNamespace>
-    <AssemblyName>GetAroundAuckland</AssemblyName>
+    <RootNamespace>GetAroundAuckland.Updater</RootNamespace>
+    <AssemblyName>GetAroundAuckland.Updater</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
