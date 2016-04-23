@@ -36,22 +36,22 @@ namespace GetAroundAuckland
 
         public bool Start()
         {
-            var download = WebClientService.DownloadFile(AT_GTFS_PATH, ZIP_PATH);
-            if (!download)
-            {
-                Logger.Info(string.Format("File could not be downloaded. Retrying ({0})", _retryNum++));
-                if (_retryNum <= TOTAL_RETRY)
-                    Start();
-                else
-                    return false;
-            }
+            //var download = WebClientService.DownloadFile(AT_GTFS_PATH, ZIP_PATH);
+            //if (!download)
+            //{
+            //    Logger.Info(string.Format("File could not be downloaded. Retrying ({0})", _retryNum++));
+            //    if (_retryNum <= TOTAL_RETRY)
+            //        Start();
+            //    else
+            //        return false;
+            //}
 
-            var zip = ZipService.Unzip(ZIP_PATH, "gtfs");
-            if (!zip)
-            {
-                Logger.Info("Zip file could not be extracted.");
-                return false;
-            }
+            //var zip = ZipService.Unzip(ZIP_PATH, "gtfs");
+            //if (!zip)
+            //{
+            //    Logger.Info("Zip file could not be extracted.");
+            //    return false;
+            //}
 
             var agencies = CsvService.Parse<Agency, AgencyMap>("gtfs\\agency.txt");
             var calendars = CsvService.Parse<Calendar, CalendarMap>("gtfs\\calendar.txt");

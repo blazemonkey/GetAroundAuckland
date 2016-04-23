@@ -1,25 +1,26 @@
-﻿using System;
+﻿using GetAroundAuckland.Services.SqlService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
 using GetAroundAuckland.Models;
 using System.Configuration;
+using MySql.Data.MySqlClient;
 using System.Diagnostics;
 
 namespace GetAroundAuckland.Services.SqlService
 {
-    public class SqlService : ISqlService
+    public class MySqlService : ISqlService
     {
-        public readonly string CONNECTION_STRING = ConfigurationManager.ConnectionStrings["connString"].ConnectionString;        
+        public readonly string CONNECTION_STRING = ConfigurationManager.ConnectionStrings["mySqlConnString"].ConnectionString;
 
         private bool Add<T>(List<T> rows, string selectSql, string insertSql, string updateSql) where T : DbModel
         {
             if (rows == null)
                 return false;
 
-            using (var conn = new SqlConnection(CONNECTION_STRING))
+            using (var conn = new MySqlConnection(CONNECTION_STRING))
             {
                 try
                 {
@@ -31,19 +32,19 @@ namespace GetAroundAuckland.Services.SqlService
                         {
                             foreach (var model in rows)
                             {
-                                var selectCmd = new SqlCommand(selectSql, conn);
+                                var selectCmd = new MySqlCommand(selectSql, conn);
                                 selectCmd.Transaction = trans;
-                                model.SetSqlParameters(selectCmd, "Select");
+                                model.SetMySqlParameters(selectCmd, "Select");
                                 var selectReader = selectCmd.ExecuteReader();
 
                                 if (!selectReader.HasRows)
                                 {
                                     selectReader.Close();
 
-                                    var insertCmd = new SqlCommand(insertSql, conn);
+                                    var insertCmd = new MySqlCommand(insertSql, conn);
                                     insertCmd.Transaction = trans;
-                                    model.SetSqlParameters(insertCmd, "Insert");
-                                    insertCmd.ExecuteNonQuery();
+                                    model.SetMySqlParameters(insertCmd, "Insert");
+                                    insertCmd.ExecuteNonQuery();                                    
                                 }
                                 else
                                 {
@@ -52,11 +53,11 @@ namespace GetAroundAuckland.Services.SqlService
 
                                     if (cmp)
                                     {
-                                        var updateCmd = new SqlCommand(updateSql, conn);
+                                        var updateCmd = new MySqlCommand(updateSql, conn);
                                         updateCmd.Transaction = trans;
-                                        model.SetSqlParameters(updateCmd, "Update");
+                                        model.SetMySqlParameters(updateCmd, "Update");
                                         updateCmd.ExecuteNonQuery();
-                                    }                                    
+                                    }
                                 }
                             }
 

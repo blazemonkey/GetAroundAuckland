@@ -1,6 +1,8 @@
 ﻿using CsvHelper.Configuration;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -20,7 +22,7 @@ namespace GetAroundAuckland.Models
         public int Sequence { get; set; }
         public int? Distance { get; set; }
 
-        public override void SetSqlParameters(SqlCommand command, string type)
+        public override void SetSqlParameters(DbCommand command, string type)
         {
             var now = DateTime.UtcNow;
 
@@ -62,7 +64,49 @@ namespace GetAroundAuckland.Models
             }
         }
 
-        public override bool Compare(SqlDataReader reader, DbModel model)
+        public override void SetMySqlParameters(DbCommand command, string type)
+        {
+            var now = DateTime.UtcNow;
+
+            switch (type)
+            {
+                case "Select":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", Id));
+                        command.Parameters.Add(new MySqlParameter("@1", Sequence));
+                        break;
+                    }
+                case "Insert":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", Id));
+                        command.Parameters.Add(new MySqlParameter("@1", Latitude));
+                        command.Parameters.Add(new MySqlParameter("@2", Longitude));
+                        command.Parameters.Add(new MySqlParameter("@3", Sequence));
+                        if (Distance == null)
+                            command.Parameters.Add(new MySqlParameter("@4", DBNull.Value));
+                        else
+                            command.Parameters.Add(new MySqlParameter("@4", Distance.Value));
+                        command.Parameters.Add(new MySqlParameter("@5", now));
+                        command.Parameters.Add(new MySqlParameter("@6", now));
+                        break;
+                    }
+                case "Update":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", Id));
+                        command.Parameters.Add(new MySqlParameter("@1", Sequence));
+                        command.Parameters.Add(new MySqlParameter("@2", Latitude));
+                        command.Parameters.Add(new MySqlParameter("@3", Longitude));
+                        if (Distance == null)
+                            command.Parameters.Add(new MySqlParameter("@4", DBNull.Value));
+                        else
+                            command.Parameters.Add(new MySqlParameter("@4", Distance.Value));
+                        command.Parameters.Add(new MySqlParameter("@5", now));
+                        break;
+                    }
+            }
+        }
+
+        public override bool Compare(DbDataReader reader, DbModel model)
         {
             var row = new Shape();
             var shape = (Shape)model;

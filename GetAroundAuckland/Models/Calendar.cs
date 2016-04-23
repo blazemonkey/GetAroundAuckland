@@ -1,6 +1,8 @@
 ﻿using CsvHelper.Configuration;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -27,7 +29,7 @@ namespace GetAroundAuckland.Models
         public bool Saturday { get; set; }
         public bool Sunday { get; set; }
 
-        public override void SetSqlParameters(SqlCommand command, string type)
+        public override void SetSqlParameters(DbCommand command, string type)
         {
             var now = DateTime.UtcNow;
 
@@ -72,7 +74,52 @@ namespace GetAroundAuckland.Models
             }
         }
 
-        public override bool Compare(SqlDataReader reader, DbModel model)
+        public override void SetMySqlParameters(DbCommand command, string type)
+        {
+            var now = DateTime.UtcNow;
+
+            switch (type)
+            {
+                case "Select":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", ServiceId));
+                        break;
+                    }
+                case "Insert":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", ServiceId));
+                        command.Parameters.Add(new MySqlParameter("@1", StartDate));
+                        command.Parameters.Add(new MySqlParameter("@2", EndDate));
+                        command.Parameters.Add(new MySqlParameter("@3", Monday));
+                        command.Parameters.Add(new MySqlParameter("@4", Tuesday));
+                        command.Parameters.Add(new MySqlParameter("@5", Wednesday));
+                        command.Parameters.Add(new MySqlParameter("@6", Thursday));
+                        command.Parameters.Add(new MySqlParameter("@7", Friday));
+                        command.Parameters.Add(new MySqlParameter("@8", Saturday));
+                        command.Parameters.Add(new MySqlParameter("@9", Sunday));
+                        command.Parameters.Add(new MySqlParameter("@10", now));
+                        command.Parameters.Add(new MySqlParameter("@11", now));
+                        break;
+                    }
+                case "Update":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", ServiceId));
+                        command.Parameters.Add(new MySqlParameter("@1", StartDate));
+                        command.Parameters.Add(new MySqlParameter("@2", EndDate));
+                        command.Parameters.Add(new MySqlParameter("@3", Monday));
+                        command.Parameters.Add(new MySqlParameter("@4", Tuesday));
+                        command.Parameters.Add(new MySqlParameter("@5", Wednesday));
+                        command.Parameters.Add(new MySqlParameter("@6", Thursday));
+                        command.Parameters.Add(new MySqlParameter("@7", Friday));
+                        command.Parameters.Add(new MySqlParameter("@8", Saturday));
+                        command.Parameters.Add(new MySqlParameter("@9", Sunday));
+                        command.Parameters.Add(new MySqlParameter("@10", now));
+                        break;
+                    }
+            }
+        }
+
+        public override bool Compare(DbDataReader reader, DbModel model)
         {
             var row = new Calendar();
             var calendar = (Calendar)model;

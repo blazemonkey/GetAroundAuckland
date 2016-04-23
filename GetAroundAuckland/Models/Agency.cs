@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Common;
 using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace GetAroundAuckland.Models
 {   
@@ -21,7 +23,7 @@ namespace GetAroundAuckland.Models
         public string Lang { get; set; }
         public string Phone { get; set; }
 
-        public override void SetSqlParameters(SqlCommand command, string type)
+        public override void SetSqlParameters(DbCommand command, string type)
         {
             var now = DateTime.UtcNow;
 
@@ -58,7 +60,44 @@ namespace GetAroundAuckland.Models
             }
         }
 
-        public override bool Compare(SqlDataReader reader, DbModel model)
+        public override void SetMySqlParameters(DbCommand command, string type)
+        {
+            var now = DateTime.UtcNow;
+
+            switch (type)
+            {
+                case "Select":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", Id));
+                        break;
+                    }
+                case "Insert":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", Id));
+                        command.Parameters.Add(new MySqlParameter("@1", Name));
+                        command.Parameters.Add(new MySqlParameter("@2", Url));
+                        command.Parameters.Add(new MySqlParameter("@3", TimeZone));
+                        command.Parameters.Add(new MySqlParameter("@4", Lang));
+                        command.Parameters.Add(new MySqlParameter("@5", Phone));
+                        command.Parameters.Add(new MySqlParameter("@6", now));
+                        command.Parameters.Add(new MySqlParameter("@7", now));
+                        break;
+                    }
+                case "Update":
+                    {
+                        command.Parameters.Add(new MySqlParameter("@0", Id));
+                        command.Parameters.Add(new MySqlParameter("@1", Name));
+                        command.Parameters.Add(new MySqlParameter("@2", Url));
+                        command.Parameters.Add(new MySqlParameter("@3", TimeZone));
+                        command.Parameters.Add(new MySqlParameter("@4", Lang));
+                        command.Parameters.Add(new MySqlParameter("@5", Phone));
+                        command.Parameters.Add(new MySqlParameter("@6", now));
+                        break;
+                    }
+            }
+        }
+
+        public override bool Compare(DbDataReader reader, DbModel model)
         {
             var row = new Agency();
             var agency = (Agency)model;

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.Common;
 
 namespace GetAroundAuckland.Models
 {
@@ -12,7 +8,8 @@ namespace GetAroundAuckland.Models
         public DateTime CreatedTime { get; set; }
         public DateTime LastUpdatedTime { get; set; }
 
-        public abstract void SetSqlParameters(SqlCommand command, string type);
-        public abstract bool Compare(SqlDataReader reader, DbModel model);
+        public abstract void SetSqlParameters(DbCommand command, string type);
+        public abstract void SetMySqlParameters(DbCommand command, string type);
+        public abstract bool Compare(DbDataReader reader, DbModel model);
     }
 }

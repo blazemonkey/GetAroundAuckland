@@ -31,6 +31,7 @@ namespace GetAroundAuckland
         {
             container.RegisterType<ICsvService, CsvService>();
             container.RegisterType<ISqlService, SqlService>();
+            container.RegisterType<ISqlService, MySqlService>();
             container.RegisterType<IWebClientService, WebClientService>();
             container.RegisterType<IZipService, ZipService>();
         }
