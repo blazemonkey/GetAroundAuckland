@@ -1,0 +1,1 @@
+﻿Data Source=localhost\\SQLEXPRESS;Initial Catalog=AucklandTransport; Integrated Security=true; MultipleActiveResultSets=True

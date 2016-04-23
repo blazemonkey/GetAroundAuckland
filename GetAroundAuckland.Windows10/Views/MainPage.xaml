@@ -1,0 +1,40 @@
+﻿<Page
+    x:Class="GetAroundAuckland.Windows10.Views.MainPage"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    xmlns:prism="using:Prism.Windows.Mvvm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GetAroundAuckland.Windows10"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource AppBackgroundBrush}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Background="{ThemeResource ThemeBackground}" Padding="5">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="ms-appx:///Images/SmallLogo.png" 
+                       Width="50" 
+                       Height="50"
+                       Margin="5"/>
+            </StackPanel>
+        </Grid>
+        <SplitView x:Name="MainSplitView" DisplayMode="CompactOverlay" IsPaneOpen="{Binding IsPaneOpen}" 
+               CompactPaneLength="50" OpenPaneLength="150" Grid.Row="1" Background="White" BorderBrush="Black">
+            <SplitView.Pane>
+                <StackPanel Background="Black">
+                    <RadioButton Style="{StaticResource NavRadioButtonStyle}" Tag="&#xE700;" Command="{Binding MenuClickCommand}" Background="Black" Content="menu" GroupName="Hamburger"/>
+                    <RadioButton Style="{StaticResource NavRadioButtonStyle}" Tag="&#xE8CB;" Command="{Binding RoutesClickCommand}" IsChecked="{Binding IsRouteChecked}" Content="routes" GroupName="Navigation"/>
+                    <RadioButton Style="{StaticResource NavRadioButtonStyle}" Tag="&#xE707;" Command="{Binding StopsClickCommand}" Content="stops" GroupName="Navigation"/>
+                    <RadioButton Style="{StaticResource NavRadioButtonStyle}" Tag="&#xE913;" Command="{Binding NearbyClickCommand}" Content="nearby" GroupName="Navigation"/>
+                </StackPanel>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Frame x:Name="SplitViewContent"/>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Page>
