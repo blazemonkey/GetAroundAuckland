@@ -1,4 +1,5 @@
 ﻿using GetAroundAuckland.Windows10.Interfaces;
+using GetAroundAuckland.Windows10.Services.RestService;
 using GetAroundAuckland.Windows10.Services.SqlService;
 using Microsoft.Practices.Unity;
 using Prism.Windows.Mvvm;
@@ -21,6 +22,8 @@ namespace GetAroundAuckland.Windows10.ViewModels
         public INavigationService NavigationService { get; set; }
         [Dependency]
         public IMessengerService MessengerService { get; set; }
+        [Dependency]
+        public IRestService RestService { get; set; }
         [Dependency]
         public ISqlService SqlService { get; set; }
 

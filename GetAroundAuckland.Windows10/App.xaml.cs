@@ -11,6 +11,7 @@ using Services.MessengerService;
 using GetAroundAuckland.Windows10.Services.SqlService;
 using GetAroundAuckland.Windows10.Interfaces;
 using GetAroundAuckland.Windows10.ViewModels;
+using GetAroundAuckland.Windows10.Services.RestService;
 
 namespace GetAroundAuckland.Windows10
 {
@@ -43,6 +44,7 @@ namespace GetAroundAuckland.Windows10
             Container.RegisterType<IFileReaderService, FileReaderService>();
             Container.RegisterType<IJsonService, JsonService>();
             Container.RegisterType<IMessengerService, MessengerService>();
+            Container.RegisterType<IRestService, RestService>();
             Container.RegisterType<ISqlService, SqlService>();
         }
 

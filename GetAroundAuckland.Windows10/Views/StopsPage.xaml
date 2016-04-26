@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="GetAroundAuckland.Windows10.Views.RoutesPage"
+    x:Class="GetAroundAuckland.Windows10.Views.StopsPage"
     xmlns:prism="using:Prism.Windows.Mvvm"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,38 +10,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    
     <Page.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <converters:AgencyToColorConverter x:Key="AgencyToColorConverter"/>
-        <CollectionViewSource x:Key="RouteGroups"
+        <CollectionViewSource x:Key="StopGroups"
                               Source="{Binding Grouped}"
                               IsSourceGrouped="True"/>
         <DataTemplate x:Key="GroupItemTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Rectangle Grid.Column="0"
-                           Height="Auto"
-                           Fill="{Binding AgencyId, Converter={StaticResource AgencyToColorConverter}}"/>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="5">
-                    <TextBlock Text="{Binding AgencyId}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
-                    <TextBlock Text="{Binding ShortName}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
-                </StackPanel>
-                <TextBlock Grid.Column="2" Text="{Binding LongName}" FontWeight="Light" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="0" Text="{Binding Id}" FontWeight="Light" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="Light" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
+
     <Grid Background="{ThemeResource AppBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Background="Black">
-            <TextBlock Text="ROUTES" FontWeight="Bold" Margin="15" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="STOPS" FontWeight="Bold" Margin="15" Foreground="White" VerticalAlignment="Center"/>
         </StackPanel>
         <Grid Grid.Row="1">
             <StackPanel Orientation="Vertical" 
@@ -54,9 +46,9 @@
             </StackPanel>
             <SemanticZoom Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
                 <SemanticZoom.ZoomedInView>
-                    <controls:PerfectListView x:Name="RoutesListView"
+                    <controls:PerfectListView x:Name="StopsListView"
                               IsHoldingEnabled="False"
-                              ItemsSource="{Binding Source={StaticResource RouteGroups}}"
+                              ItemsSource="{Binding Source={StaticResource StopGroups}}"
                               ItemTemplate="{StaticResource GroupItemTemplate}"
                               ContinuumNavigationTransitionInfo.ExitElementContainer="True"
                               IsItemClickEnabled="True">
@@ -66,7 +58,7 @@
                     </controls:PerfectListView>
                 </SemanticZoom.ZoomedInView>
                 <SemanticZoom.ZoomedOutView>
-                    <GridView ItemsSource="{Binding Source={StaticResource RouteGroups}, Path=CollectionGroups}"
+                    <GridView ItemsSource="{Binding Source={StaticResource StopGroups}, Path=CollectionGroups}"
                               ItemTemplate="{StaticResource JumpTemplate}">
                     </GridView>
                 </SemanticZoom.ZoomedOutView>

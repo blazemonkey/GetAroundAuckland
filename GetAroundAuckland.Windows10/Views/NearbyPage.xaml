@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="GetAroundAuckland.Windows10.Views.NearbyPage"
+    xmlns:prism="using:Prism.Windows.Mvvm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GetAroundAuckland.Windows10.Views"
+    xmlns:controls="using:GetAroundAuckland.Windows10.Controls"
+    xmlns:converters="using:GetAroundAuckland.Windows10.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Background="Black">
+            <TextBlock Text="NEARBY STOPS" FontWeight="Bold" Margin="15" Foreground="White" VerticalAlignment="Center"/>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <maps:MapControl x:Name="PhoneMapControl"
+                                     MapServiceToken="FfbbvsO78DJRFC78YV5y~sb0TETdsQ4D_ob3F5fyZMA~AuctfqY8rW2lK7mv-CwsiLn9EAk63RXYSHV6LMtdYC8lxkymjB-2sujXcLGJFoBN" 
+                                     ZoomLevel="16"
+                                     Loaded="PhoneMapControl_Loaded"/>
+        </Grid>
+
+    </Grid>
+</Page>

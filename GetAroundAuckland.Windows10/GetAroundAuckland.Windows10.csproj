@@ -98,26 +98,44 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PerfectListView.cs" />
+    <Compile Include="Converters\AgencyToColorConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\ToLowerCaseConverter.cs" />
     <Compile Include="Converters\ToUpperCaseConverter.cs" />
     <Compile Include="Helpers\AlphaKeyGrouped.cs" />
     <Compile Include="Helpers\DeviceInformation.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\JumpListHelper.cs" />
     <Compile Include="Interfaces\IMainPageViewModel.cs" />
+    <Compile Include="Interfaces\INearbyPageViewModel.cs" />
     <Compile Include="Interfaces\IRoutesPageViewModel.cs" />
+    <Compile Include="Interfaces\IStopsPageViewModel.cs" />
+    <Compile Include="Models\Agency.cs" />
     <Compile Include="Models\Route.cs" />
+    <Compile Include="Models\RouteType.cs" />
+    <Compile Include="Models\Stop.cs" />
+    <Compile Include="Services\RestService\IRestService.cs" />
+    <Compile Include="Services\RestService\RestService.cs" />
     <Compile Include="Services\SqlService\ISqlService.cs" />
     <Compile Include="Services\SqlService\SqlService.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\NearbyPageViewModel.cs" />
     <Compile Include="ViewModels\RoutesPageViewModel.cs" />
+    <Compile Include="ViewModels\StopsPageViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\NearbyPage.xaml.cs">
+      <DependentUpon>NearbyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RoutesPage.xaml.cs">
       <DependentUpon>RoutesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StopsPage.xaml.cs">
+      <DependentUpon>StopsPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -151,7 +169,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\NearbyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RoutesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StopsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

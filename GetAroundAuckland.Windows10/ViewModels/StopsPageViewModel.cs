@@ -6,15 +6,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GetAroundAuckland.Windows10.ViewModels
 {
-    public class RoutesPageViewModel : BaseViewModel, IRoutesPageViewModel
+    public class StopsPageViewModel : BaseViewModel, IStopsPageViewModel
     {
         private bool _isLoading;
-        private ObservableCollection<Route> _routes;
-        private IList<AlphaKeyGroup<Route>> _grouped;
+        private ObservableCollection<Stop> _stops;
+        private IList<AlphaKeyGroup<Stop>> _grouped;
 
         public bool IsLoading
         {
@@ -26,17 +27,17 @@ namespace GetAroundAuckland.Windows10.ViewModels
             }
         }
 
-        public ObservableCollection<Route> Routes
+        public ObservableCollection<Stop> Stops
         {
-            get { return _routes; }
+            get { return _stops; }
             private set
             {
-                _routes = value;
-                OnPropertyChanged("Routes");
+                _stops = value;
+                OnPropertyChanged("Stops");
             }
         }
 
-        public IList<AlphaKeyGroup<Route>> Grouped
+        public IList<AlphaKeyGroup<Stop>> Grouped
         {
             get { return _grouped; }
             set
@@ -46,24 +47,24 @@ namespace GetAroundAuckland.Windows10.ViewModels
             }
         }
 
-        public RoutesPageViewModel()
+        public StopsPageViewModel()
         {
 
         }
 
-        public async Task LoadRoutes()
+        public async Task LoadStops()
         {
             try
             {
                 IsLoading = true;
-                var response = await RestService.GetApi<List<Route>>("http://localhost:2412/api/", "routes");
-                Routes = new ObservableCollection<Route>(response.OrderBy(x => x.AgencyId).ThenBy(x => x.ShortName).ThenBy(x => x.LongName));
+                var response = await RestService.GetApi<List<Stop>>("http://localhost:2412/api/", "stops");
+                Stops = new ObservableCollection<Stop>(response);
 
-                Grouped = AlphaKeyGroup<Route>.CreateGroups(Routes, CultureInfo.CurrentUICulture, s => s.LongName, true);
+                Grouped = AlphaKeyGroup<Stop>.CreateGroups(Stops, CultureInfo.CurrentUICulture, s => s.Name, true);
             }
             catch (Exception)
             {
-                
+
             }
             finally
             {
