@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetAroundAuckland.Windows10
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "GetAroundAuckland.Services\Services.csproj", "{3789D16A-6B19-4B47-898D-EF4C890BC800}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GetAroundAuckland.WebService", "GetAroundAuckland.WebService\GetAroundAuckland.WebService.xproj", "{B15C0104-BEE4-49A1-A357-8836BB8C156C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,7 @@ Global
 		{DB70D6DD-0082-4010-9659-0F83773A9A80}.Release|x86.ActiveCfg = Release|Any CPU
 		{DB70D6DD-0082-4010-9659-0F83773A9A80}.Release|x86.Build.0 = Release|Any CPU
 		{378C8EC6-EF30-4FD9-B6FC-AA7F6C12DAA3}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{378C8EC6-EF30-4FD9-B6FC-AA7F6C12DAA3}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{378C8EC6-EF30-4FD9-B6FC-AA7F6C12DAA3}.Debug|ARM.ActiveCfg = Debug|ARM
 		{378C8EC6-EF30-4FD9-B6FC-AA7F6C12DAA3}.Debug|ARM.Build.0 = Debug|ARM
 		{378C8EC6-EF30-4FD9-B6FC-AA7F6C12DAA3}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -73,6 +76,22 @@ Global
 		{3789D16A-6B19-4B47-898D-EF4C890BC800}.Release|x64.Build.0 = Release|x64
 		{3789D16A-6B19-4B47-898D-EF4C890BC800}.Release|x86.ActiveCfg = Release|x86
 		{3789D16A-6B19-4B47-898D-EF4C890BC800}.Release|x86.Build.0 = Release|x86
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|x64.Build.0 = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Debug|x86.Build.0 = Debug|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|ARM.Build.0 = Release|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|x64.ActiveCfg = Release|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|x64.Build.0 = Release|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|x86.ActiveCfg = Release|Any CPU
+		{B15C0104-BEE4-49A1-A357-8836BB8C156C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
