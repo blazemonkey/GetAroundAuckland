@@ -28,7 +28,7 @@ namespace GetAroundAuckland.WebService.Controllers
 
         // GET api/routes/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string Get(string id)
         {
             return "value";
         }        

@@ -11,5 +11,10 @@ namespace GetAroundAuckland.WebService.Services.SqlService
         List<Route> GetRoutes();
         List<Stop> GetStops();
         List<Agency> GetAgencies();
+        List<Trip> GetTripsByRouteId(string id);
+        List<StopTime> GetStopTimesByTripId(string id);
+        List<Shape> GetShapesById(string id);
+        List<Calendar> GetCalendarsByServiceId(string id);
+        List<CalendarDate> GetCalendarDatesByServiceId(string id);
     }
 }
