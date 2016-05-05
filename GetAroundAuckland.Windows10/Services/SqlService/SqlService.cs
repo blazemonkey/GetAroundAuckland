@@ -33,7 +33,7 @@ namespace GetAroundAuckland.Windows10.Services.SqlService
                     conn.Close();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
