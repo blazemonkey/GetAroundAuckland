@@ -1,5 +1,4 @@
-﻿using GetAroundAuckland.Windows10.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,17 +20,11 @@ namespace GetAroundAuckland.Windows10.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class StopsPage : Page
+    public sealed partial class SettingsPage : Page
     {
-        public StopsPage()
+        public SettingsPage()
         {
             this.InitializeComponent();
-        }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            var vm = (IStopsPageViewModel)DataContext;
-            await vm.LoadStops();
         }
     }
 }

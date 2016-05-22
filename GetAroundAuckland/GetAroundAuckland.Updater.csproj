@@ -90,14 +90,16 @@
     <Compile Include="Services\SqlService\ISqlService.cs" />
     <Compile Include="Services\SqlService\MySqlService.cs" />
     <Compile Include="Services\SqlService\SqlService.cs" />
-    <Compile Include="Services\ZipService\IZipService.cs" />
-    <Compile Include="Services\ZipService\ZipService.cs" />
+    <Compile Include="ZipService\IZipService.cs" />
+    <Compile Include="ZipService\ZipService.cs" />
     <Compile Include="Services\WebClientService\IWebClientService.cs" />
     <Compile Include="Services\WebClientService\WebClientService.cs" />
     <Compile Include="Updater.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

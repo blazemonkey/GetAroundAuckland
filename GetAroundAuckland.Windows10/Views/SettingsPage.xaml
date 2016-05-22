@@ -1,0 +1,115 @@
+﻿<Page
+    x:Class="GetAroundAuckland.Windows10.Views.SettingsPage"
+    xmlns:prism="using:Prism.Windows.Mvvm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GetAroundAuckland.Windows10.Views"
+    xmlns:controls="using:GetAroundAuckland.Windows10.Controls"
+    xmlns:converters="using:GetAroundAuckland.Windows10.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Page.Resources>
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Background="{ThemeResource ThemeBackground}" Padding="5">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="ms-appx:///Images/SmallLogo.png" 
+                       Width="50" 
+                       Height="50"
+                       Margin="5"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Pivot>
+                <PivotItem Header="settings">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="gps"
+                                   Margin="10"/>
+                        <TextBlock Grid.Row="1"
+                               Text="nearby distance range"
+                               Margin="10"/>
+                        <ToggleSwitch Grid.Column="1"
+                                      OnContent="on"
+                                      OffContent="off"
+                                      Foreground="Gray"
+                                      Margin="10"
+                                      IsOn="{Binding Gps, Mode=TwoWay}"/>
+                        <ComboBox Grid.Row="1"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Distances}"
+                                  SelectedValue="{Binding SelectedDistance, Mode=TwoWay}"
+                                  VerticalAlignment="Center" />
+                    </Grid>
+                </PivotItem>
+                <PivotItem Header="about">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0"
+                          Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                               Text="information version"
+                               Margin="10"/>
+                            <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Margin="10"
+                               Foreground="Gray"
+                               Text="{Binding InfoVersion}"/>
+                            <TextBlock Grid.Row="1"
+                               Text="app version"
+                               Margin="10"/>
+                            <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="10"
+                               Foreground="Gray"
+                               Text="{Binding Version}"/>
+                        </Grid>
+                        <Grid Grid.Row="1"
+                          Margin="10">
+                            <StackPanel>
+                                <TextBlock FontSize="12"
+                                       Margin="10"
+                                       Foreground="Gray"
+                                       Text="{Binding PolicyText}"/>
+                                <TextBlock FontSize="12"
+                                       Margin="10"
+                                       Foreground="Gray"
+                                       Text="{Binding Policy2Text}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </PivotItem>
+            </Pivot>
+        </Grid>
+    </Grid>
+</Page>

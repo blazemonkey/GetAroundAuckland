@@ -145,16 +145,24 @@ namespace GetAroundAuckland.Windows10.ViewModels
             {
                 _isShowStops = value;
                 OnPropertyChanged("IsShowStops");
+
+                if (MessengerService != null)
+                    MessengerService.Send(_isShowStops, "ShowStops");
             }
         }
 
         public DelegateCommand SelectedTripChangedCommand { get; set; }
         public DelegateCommand IsShowStopsCheckedCommand { get; set; }
+        public DelegateCommand TapCenterMapCommand { get; set; }
+        public DelegateCommand<StopTime> TapStopTimeCommand { get; set; }
 
         public RoutePageViewModel()
         {
             SelectedTripChangedCommand = new DelegateCommand(ExecuteSelectedTripChangedCommand, CanExecuteSelectedTripChangedCommand);
             IsShowStopsCheckedCommand = new DelegateCommand(ExecuteIsShowStopsCheckedCommand, CanExecuteIsShowStopsCheckedCommand);
+            TapCenterMapCommand = new DelegateCommand(ExecuteTapCenterMapCommand, CanExecuteTapCenterMapCommand);
+            TapStopTimeCommand = new DelegateCommand<StopTime>(ExecuteTapStopTimeCommand, CanExecuteTapStopTimeCommand);
+            IsShowStops = true;
         }
 
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
@@ -162,22 +170,21 @@ namespace GetAroundAuckland.Windows10.ViewModels
             IsLoading = true;
             try
             {
-                var route = (Route)NavigationParameters.Instance.GetParameters();
+                var routeId = e.Parameter.ToString();
+                var route = await SqlService.GetRouteById(routeId);
                 SelectedRoute = route;
-                var agencies = await RestService.GetApi<List<Agency>>("http://localhost:2412/api/", "agencies");
+                var agencies = await SqlService.GetAgencies();
                 AgencyName = agencies.First(x => x.Id == SelectedRoute.AgencyId).Name;
 
-                var trips = await RestService.GetApi<List<Trip>>("http://localhost:2412/api/", string.Format("trips/{0}", SelectedRoute.Id));
-                Trips = new ObservableCollection<Trip>(trips.OrderBy(x => x.FirstArrivalTime));
-
+                await SetTrip(SelectedRoute.Id);
                 if (!Trips.Any())
                     return;
 
                 SelectedTrip = Trips.First();
 
-                await SetStops(SelectedTrip);
-                await SetCalendars(SelectedTrip);
-                await SetShapes(SelectedTrip);
+                await SetStops(SelectedTrip.Id);
+                await SetCalendars(SelectedTrip.ServiceId);
+                await SetShapes(SelectedTrip.ShapeId);
             }
             catch (Exception)
             {
@@ -191,9 +198,9 @@ namespace GetAroundAuckland.Windows10.ViewModels
 
         private async void ExecuteSelectedTripChangedCommand()
         {
-            await SetStops(SelectedTrip);
-            await SetCalendars(SelectedTrip);
-            await SetShapes(SelectedTrip);
+            await SetStops(SelectedTrip.Id);
+            await SetCalendars(SelectedTrip.ServiceId);
+            await SetShapes(SelectedTrip.ShapeId);
         }
 
         private bool CanExecuteSelectedTripChangedCommand()
@@ -206,7 +213,7 @@ namespace GetAroundAuckland.Windows10.ViewModels
             if (IsShowStops)
                 MessengerService.Send(Shapes, "DrawShapes");
             else
-                MessengerService.Send(true, "ClearShapes");
+                MessengerService.Send(true, "ReCenterMapRoute");
         }
 
         private bool CanExecuteIsShowStopsCheckedCommand()
@@ -214,21 +221,67 @@ namespace GetAroundAuckland.Windows10.ViewModels
             return true;
         }
 
-        private async Task SetStops(Trip trip)
+        private void ExecuteTapCenterMapCommand()
         {
-            var stopTimes = await RestService.GetApi<List<StopTime>>("http://localhost:2412/api/", string.Format("stopTimes/{0}", trip.Id));
-            StopTimes = new ObservableCollection<StopTime>(stopTimes);
-            var stops = from stop in Stop.ListOfStops
-                       join time in stopTimes
-                       on stop.Id equals time.StopId
-                       orderby time.StopSequence
-                       select stop;
-            Stops = new ObservableCollection<Stop>(stops);
+            MessengerService.Send(true, "ReCenterMapRoute");
         }
 
-        private async Task SetCalendars(Trip trip)
+        private bool CanExecuteTapCenterMapCommand()
         {
-            var calendars = await RestService.GetApi<List<Models.Calendar>>("http://localhost:2412/api/", string.Format("calendars/{0}", trip.ServiceId));
+            return true;
+        }
+
+        private void ExecuteTapStopTimeCommand(StopTime stopTime)
+        {
+            NavigationService.Navigate(App.Experiences.Stop.ToString(), stopTime.StopId);
+        }
+
+        private bool CanExecuteTapStopTimeCommand(StopTime stopTime)
+        {
+            return true;
+        }
+
+        private async Task SetTrip(string routeId)
+        {
+            var trips = await SqlService.GetTripsByRouteId(SelectedRoute.Id);
+            if (!trips.Any())
+            {
+                trips = await RestService.GetTripsByRouteId(SelectedRoute.Id);
+                await SqlService.AddTrips(trips);
+            }
+
+            Trips = new ObservableCollection<Trip>(trips.OrderBy(x => x.FirstArrivalTime));
+        }
+
+        private async Task SetStops(string tripId)
+        {
+            var stopTimes = await SqlService.GetStopTimesByTripId(tripId);
+            if (!stopTimes.Any())
+            {
+                stopTimes = await RestService.GetStopTimesByTripId(tripId);
+                await SqlService.AddStopTimes(stopTimes);
+            }
+
+            StopTimes = new ObservableCollection<StopTime>(stopTimes);
+            var stops = await SqlService.GetStops();
+
+            var stopsJoined = from stop in stops
+                              join time in stopTimes
+                              on stop.Id equals time.StopId
+                              orderby time.StopSequence
+                              select stop;
+            Stops = new ObservableCollection<Stop>(stopsJoined);
+        }
+
+        private async Task SetCalendars(string serviceId)
+        {
+            var calendars = await SqlService.GetCalendarsByServiceId(serviceId);
+            if (!calendars.Any())
+            {
+                calendars = await RestService.GetCalendarsByServiceId(serviceId);
+                await SqlService.AddCalendars(calendars);
+            }
+            
             Calendars = new ObservableCollection<Models.Calendar>(calendars);
 
             if (!Calendars.Any())
@@ -236,13 +289,19 @@ namespace GetAroundAuckland.Windows10.ViewModels
 
             SelectedCalendar = Calendars.First();
 
-            var calendarDates = await RestService.GetApi<List<CalendarDate>>("http://localhost:2412/api/", string.Format("calendarDates/{0}", trip.ServiceId));
+            var calendarDates = await SqlService.GetCalendarDatesByServiceId(serviceId);
             CalendarDates = new ObservableCollection<CalendarDate>(calendarDates);
         }
 
-        private async Task SetShapes(Trip trip)
+        private async Task SetShapes(string shapeId)
         {
-            var shapes = await RestService.GetApi<List<Shape>>("http://localhost:2412/api/", string.Format("shapes/{0}", trip.ShapeId));
+            var shapes = await SqlService.GetShapesById(shapeId);
+            if (!shapes.Any())
+            {
+                shapes = await RestService.GetShapesById(shapeId);
+                await SqlService.AddShapes(shapes);
+            }
+            
             Shapes = new ObservableCollection<Shape>(shapes);
         }
 

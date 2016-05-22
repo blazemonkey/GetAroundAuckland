@@ -196,5 +196,10 @@ namespace GetAroundAuckland.Services.SqlService
             Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
             return result;
         }
+
+        public bool PostProcessing()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

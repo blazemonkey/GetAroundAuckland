@@ -100,8 +100,11 @@
     </Compile>
     <Compile Include="Controls\PerfectListView.cs" />
     <Compile Include="Converters\AgencyToColorConverter.cs" />
+    <Compile Include="Converters\ArrivingTimeConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\DateFormatConverter.cs" />
     <Compile Include="Converters\DateTimeConverter.cs" />
+    <Compile Include="Converters\GpsStateToSolidBrushConverter.cs" />
     <Compile Include="Converters\StopIdToStopNameConverter.cs" />
     <Compile Include="Converters\ToLowerCaseConverter.cs" />
     <Compile Include="Converters\ToUpperCaseConverter.cs" />
@@ -112,25 +115,41 @@
     <Compile Include="Interfaces\IMainPageViewModel.cs" />
     <Compile Include="Interfaces\INearbyPageViewModel.cs" />
     <Compile Include="Interfaces\IRoutePageViewModel.cs" />
-    <Compile Include="Interfaces\IStopsPageViewModel.cs" />
+    <Compile Include="Interfaces\ISettingsPageViewModel.cs" />
+    <Compile Include="Interfaces\IStartupPageViewModel.cs" />
+    <Compile Include="Interfaces\IStopPageViewModel.cs" />
     <Compile Include="Models\Agency.cs" />
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\CalendarDate.cs" />
+    <Compile Include="Models\Movement.cs" />
     <Compile Include="Models\Route.cs" />
+    <Compile Include="Models\RouteStop.cs" />
     <Compile Include="Models\RouteType.cs" />
     <Compile Include="Models\Shape.cs" />
     <Compile Include="Models\Stop.cs" />
     <Compile Include="Models\StopTime.cs" />
     <Compile Include="Models\Trip.cs" />
+    <Compile Include="Services\AppDataService\AppDataService.cs" />
+    <Compile Include="Services\AppDataService\IAppDataService.cs" />
     <Compile Include="Services\RestService\IRestService.cs" />
     <Compile Include="Services\RestService\RestService.cs" />
     <Compile Include="Services\SqlService\ISqlService.cs" />
     <Compile Include="Services\SqlService\SqlService.cs" />
+    <Compile Include="Services\WebClientService\IWebClientService.cs" />
+    <Compile Include="Services\WebClientService\WebClientService.cs" />
+    <Compile Include="UserControls\GpsUserControl.xaml.cs">
+      <DependentUpon>GpsUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\QuickViewStopUserControl.xaml.cs">
+      <DependentUpon>QuickViewStopUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\NearbyPageViewModel.cs" />
     <Compile Include="ViewModels\RoutePageViewModel.cs" />
-    <Compile Include="ViewModels\StopsPageViewModel.cs" />
+    <Compile Include="ViewModels\SettingsPageViewModel.cs" />
+    <Compile Include="ViewModels\StartupPageViewModel.cs" />
+    <Compile Include="ViewModels\StopPageViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -141,8 +160,14 @@
     <Compile Include="Views\RoutePage.xaml.cs">
       <DependentUpon>RoutePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\StopsPage.xaml.cs">
-      <DependentUpon>StopsPage.xaml</DependentUpon>
+    <Compile Include="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StartupPage.xaml.cs">
+      <DependentUpon>StartupPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StopPage.xaml.cs">
+      <DependentUpon>StopPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +197,14 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
+    <Page Include="UserControls\GpsUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\QuickViewStopUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -184,7 +217,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\StopsPage.xaml">
+    <Page Include="Views\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StartupPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StopPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,6 +240,14 @@
     <Reference Include="MySql.Data.RT">
       <HintPath>C:\Program Files (x86)\MySQL\Connector.NET 6.9\Assemblies\RT\MySql.Data.RT.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.11.1">
+      <Name>SQLite for Universal Windows Platform</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

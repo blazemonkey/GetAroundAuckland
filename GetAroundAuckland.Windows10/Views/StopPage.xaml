@@ -1,0 +1,199 @@
+﻿<Page
+    x:Class="GetAroundAuckland.Windows10.Views.StopPage"
+    xmlns:prism="using:Prism.Windows.Mvvm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GetAroundAuckland.Windows10.Views"
+    xmlns:controls="using:GetAroundAuckland.Windows10.Controls"
+    xmlns:converters="using:GetAroundAuckland.Windows10.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:GetAroundAuckland.Windows10.Helpers"
+    xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:AgencyToColorConverter x:Key="AgencyToColorConverter"/>
+        <converters:StopIdToStopNameConverter x:Key="StopIdToStopNameConverter"/>
+        <converters:DateTimeConverter x:Key="DateTimeConverter"/>
+        <converters:DateFormatConverter x:Key="DateFormatConverter"/>
+        <converters:ArrivingTimeConverter x:Key="ArrivingTimeConverter"/>
+    </Page.Resources>
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Background="{ThemeResource ThemeBackground}" Padding="5">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="ms-appx:///Images/SmallLogo.png" 
+                       Width="50" 
+                       Height="50"
+                       Margin="5"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Background="Black" Height="Auto" VerticalAlignment="Center" Padding="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding SelectedStop.Code}" Foreground="White" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding SelectedStop.Name}" TextWrapping="Wrap" Foreground="White" Margin="5,0,0,0"/>
+            </Grid>
+            <Grid Grid.Row="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1" Orientation="Vertical" 
+                            VerticalAlignment="Center"
+                            Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ProgressBar IsIndeterminate="True" />
+                    <TextBlock Text="loading..."
+                               Margin="0,5,0,0"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
+                <Pivot Grid.Row="1" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
+                    <PivotItem Header="map" Margin="14,0,10,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Button Margin="10" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding TapCenterMapCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Map" Margin="2"/>
+                                    <TextBlock Text="center map" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <maps:MapControl x:Name="StopsMapControl" Grid.Row="1"
+                                         MapServiceToken="FfbbvsO78DJRFC78YV5y~sb0TETdsQ4D_ob3F5fyZMA~AuctfqY8rW2lK7mv-CwsiLn9EAk63RXYSHV6LMtdYC8lxkymjB-2sujXcLGJFoBN" 
+                                         Loaded="StopsMapControl_Loaded"/>
+                        </Grid>
+                    </PivotItem>
+                    <PivotItem Header="routes" Margin="14,0,10,0">
+                        <Grid Grid.Row="1" Width="Auto">
+                            <controls:PerfectListView x:Name="RoutesListView" 
+                                                      ItemsSource="{Binding Routes}" 
+                                                      IsItemClickEnabled="True"
+                                                      helpers:ItemClickCommand.Command="{Binding TapRouteCommand}">
+                                <controls:PerfectListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Rectangle Grid.Column="0"
+                                                   Height="Auto"
+                                                   Fill="{Binding AgencyId, Converter={StaticResource AgencyToColorConverter}}"/>
+                                            <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="5">
+                                                <TextBlock Text="{Binding AgencyId}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
+                                                <TextBlock Text="{Binding ShortName}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{Binding LongName}" FontWeight="Light" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </controls:PerfectListView.ItemTemplate>
+                            </controls:PerfectListView>
+                        </Grid>
+                    </PivotItem>
+                    <PivotItem Header="live" Margin="14,0,10,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Margin="10" Command="{Binding TapRefreshCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <SymbolIcon Symbol="Refresh" Margin="2"/>
+                                        <TextBlock Text="refresh" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <TextBlock Grid.Column="1" Text="{Binding RefreshTime}" 
+                                           HorizontalAlignment="Right" 
+                                           VerticalAlignment="Center" 
+                                           Margin="10"
+                                           Foreground="{StaticResource ThemeSecondaryBackground}"/>
+                            </Grid>
+                            <StackPanel Grid.Row="1"
+                                    VerticalAlignment="Center">
+                                <ProgressBar IsIndeterminate="{Binding IsLoadingMovements}"
+                                         Background="Transparent"/>
+                                <TextBlock Text="{Binding MovementMessage}"
+                                       FontWeight="Light"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Visibility="{Binding HasMovements, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                            </StackPanel>
+                            <controls:PerfectListView Grid.Row="1" 
+                                                      ItemsSource="{Binding Movements}"
+                                                      HorizontalAlignment="Stretch"
+                                                      Width="Auto">
+                                <controls:PerfectListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </controls:PerfectListView.ItemContainerStyle>
+                                <controls:PerfectListView.Header>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Rectangle Grid.ColumnSpan="5" Height="1" Width="Auto" Fill="{StaticResource ThemeSecondaryBackground}" Margin="2"/>
+                                        <TextBlock Grid.Row="1" Text="route" FontWeight="Light"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="destination" FontWeight="Light"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="STA" FontWeight="Light"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="3" Text="ETA" FontWeight="Light"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="4" Text="mins" FontWeight="Light"/>
+                                        <Rectangle Grid.Row="2" Grid.ColumnSpan="5" Height="1" Width="Auto" Fill="{StaticResource ThemeSecondaryBackground}" Margin="2"/>
+                                    </Grid>
+                                </controls:PerfectListView.Header>
+                                <controls:PerfectListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="60"/>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Route}" FontWeight="Light"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding DestinationDisplay}" FontWeight="Light"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding ActualArrivalTime, Converter={StaticResource DateFormatConverter}, ConverterParameter=\{0:HH:mm\}}" FontWeight="Light"/>
+                                            <TextBlock Grid.Column="3" Text="{Binding ExpectedArrivalTime, Converter={StaticResource DateFormatConverter}, ConverterParameter=\{0:HH:mm\}}" FontWeight="Light"/>
+                                            <TextBlock Grid.Column="4" Text="{Binding ExpectedArrivalTime, Converter={StaticResource ArrivingTimeConverter}}" FontWeight="Light"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </controls:PerfectListView.ItemTemplate>
+                            </controls:PerfectListView>
+                        </Grid>
+                    </PivotItem>
+                </Pivot>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

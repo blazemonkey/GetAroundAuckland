@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace GetAroundAuckland.Windows10.Interfaces
 {
-    public interface IStopsPageViewModel
+    public interface IStartupPageViewModel
     {
-        Task LoadStops();
     }
 }

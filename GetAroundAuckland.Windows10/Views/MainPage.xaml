@@ -30,88 +30,89 @@
                        Margin="5"/>
             </StackPanel>
         </Grid>
-        <Hub Grid.Row="1" Margin="10">
-            <HubSection Header="routes">
-                <DataTemplate>
-                    <Grid Width="400">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <AutoSuggestBox HorizontalAlignment="Stretch" PlaceholderText="route number" QueryIcon="Find" Margin="10"
+        <Pivot Grid.Row="1" Margin="10">
+            <PivotItem Header="routes">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <AutoSuggestBox HorizontalAlignment="Stretch" PlaceholderText="route number" QueryIcon="Find" Margin="10"
                                         TextChanged="RouteAutoSuggestBox_TextChanged"
                                         QuerySubmitted="RouteAutoSuggestBox_QuerySubmitted"
                                         SuggestionChosen="RouteAutoSuggestBox_SuggestionChosen"
                                         FontWeight="Light"/>
-                        <Grid Grid.Row="1" Width="Auto">
-                            <controls:PerfectListView x:Name="RoutesListView" 
+                    <Grid Grid.Row="1" Width="Auto">
+                        <controls:PerfectListView x:Name="RoutesListView" 
                                                       ItemsSource="{Binding Routes}" 
                                                       IsItemClickEnabled="True"
                                                       helpers:ItemClickCommand.Command="{Binding TapRouteCommand}"
                                                       Loaded="RoutesListView_Loaded">
-                                <controls:PerfectListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5"/>
-                                                <ColumnDefinition Width="50"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Rectangle Grid.Column="0"
+                            <controls:PerfectListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5"/>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Rectangle Grid.Column="0"
                                                    Height="Auto"
                                                    Fill="{Binding AgencyId, Converter={StaticResource AgencyToColorConverter}}"/>
-                                            <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="5">
-                                                <TextBlock Text="{Binding AgencyId}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
-                                                <TextBlock Text="{Binding ShortName}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
-                                            </StackPanel>
-                                            <TextBlock Grid.Column="2" Text="{Binding LongName}" FontWeight="Light" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </controls:PerfectListView.ItemTemplate>
-                            </controls:PerfectListView>
-                        </Grid>
+                                        <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="5">
+                                            <TextBlock Text="{Binding AgencyId}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
+                                            <TextBlock Text="{Binding ShortName}" FontWeight="Light" FontSize="12" TextAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding LongName}" FontWeight="Light" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </controls:PerfectListView.ItemTemplate>
+                        </controls:PerfectListView>
                     </Grid>
-                </DataTemplate>
-            </HubSection>
-            <HubSection Header="stops">
-                <DataTemplate>
-                    <Grid Width="400">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <AutoSuggestBox HorizontalAlignment="Stretch" PlaceholderText="stop number" QueryIcon="Find" Margin="10"
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="stops">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <AutoSuggestBox HorizontalAlignment="Stretch" PlaceholderText="stop number" QueryIcon="Find" Margin="10"
                                         TextChanged="StopAutoSuggestBox_TextChanged"
                                         QuerySubmitted="StopAutoSuggestBox_QuerySubmitted"
                                         SuggestionChosen="StopAutoSuggestBox_SuggestionChosen"
                                         FontWeight="Light"/>
-                        <Grid Grid.Row="1" Width="Auto">
-                            <controls:PerfectListView x:Name="StopsListView" ItemsSource="{Binding Stops}" Loaded="StopsListView_Loaded">
-                                <controls:PerfectListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="10"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{Binding Id}" FontWeight="Bold"/>
-                                            <TextBlock Grid.Column="1" Text=" " />
-                                            <TextBlock Grid.Column="2" Text="{Binding Name}" FontWeight="Light"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </controls:PerfectListView.ItemTemplate>
-                            </controls:PerfectListView>
-                        </Grid>
+                    <Grid Grid.Row="1" Width="Auto">
+                        <controls:PerfectListView x:Name="StopsListView" 
+                                                      ItemsSource="{Binding Stops}" 
+                                                      IsItemClickEnabled="True"
+                                                      helpers:ItemClickCommand.Command="{Binding TapStopCommand}"                                                      
+                                                      Loaded="StopsListView_Loaded">
+                            <controls:PerfectListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Id}" FontWeight="Bold"/>
+                                        <TextBlock Grid.Column="1" Text=" " />
+                                        <TextBlock Grid.Column="2" Text="{Binding Name}" FontWeight="Light"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </controls:PerfectListView.ItemTemplate>
+                        </controls:PerfectListView>
                     </Grid>
-                </DataTemplate>
-            </HubSection>
-        </Hub>
+                </Grid>
+            </PivotItem>
+        </Pivot>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Label="settings"
-                          Icon="Setting">
+                          Icon="Setting"
+                          Command="{Binding TapSettingsCommand}">
             </AppBarButton>
         </CommandBar>
     </Page.BottomAppBar>

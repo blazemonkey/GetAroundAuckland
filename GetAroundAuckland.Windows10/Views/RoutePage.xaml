@@ -8,6 +8,7 @@
     xmlns:converters="using:GetAroundAuckland.Windows10.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:GetAroundAuckland.Windows10.Helpers"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -112,9 +113,9 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="schedule valid from: " Margin="5"/>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
-                                    <TextBlock Text="{Binding SelectedCalendar.StartDate, Converter={StaticResource DateTimeConverter}}" Foreground="{ThemeResource ThemeSecondaryBackground}"/>
+                                    <TextBlock Text="{Binding SelectedCalendar.StartDate, Converter={StaticResource DateTimeConverter}, ConverterParameter='REST'}" Foreground="{ThemeResource ThemeSecondaryBackground}"/>
                                     <TextBlock Text="to" Foreground="{ThemeResource ThemeSecondaryBackground}" Margin="5,0"/>
-                                    <TextBlock Text="{Binding SelectedCalendar.EndDate, Converter={StaticResource DateTimeConverter}}" Foreground="{ThemeResource ThemeSecondaryBackground}"/>
+                                    <TextBlock Text="{Binding SelectedCalendar.EndDate, Converter={StaticResource DateTimeConverter}, ConverterParameter='REST'}" Foreground="{ThemeResource ThemeSecondaryBackground}" TextWrapping="Wrap"/>
                                 </StackPanel>
                                 <Grid Grid.Row="2" DataContext="{Binding SelectedCalendar}">
                                     <Grid.ColumnDefinitions>
@@ -140,7 +141,7 @@
                                     <controls:PerfectListView.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
-                                                <TextBlock Text="{Binding Date, Converter={StaticResource DateTimeConverter}}" 
+                                                <TextBlock Text="{Binding Date, Converter={StaticResource DateTimeConverter}, ConverterParameter='WEB'}" 
                                                            FontWeight="Light" 
                                                            Foreground="{ThemeResource ThemeSecondaryBackground}"/>
                                             </Grid>
@@ -151,7 +152,9 @@
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="stops">
-                        <controls:PerfectListView ItemsSource="{Binding StopTimes}" >
+                        <controls:PerfectListView ItemsSource="{Binding StopTimes}"
+                                                  IsItemClickEnabled="True"
+                                                  helpers:ItemClickCommand.Command="{Binding TapStopTimeCommand}">
                             <controls:PerfectListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -213,8 +216,18 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
                             <CheckBox Content="show stops" IsChecked="{Binding IsShowStops, Mode=TwoWay}" Margin="10" FontWeight="Light"/>
-                            <maps:MapControl Grid.Row="1" x:Name="RoutesMapControl"
+                            <Button Margin="10" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding TapCenterMapCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Map" Margin="2"/>
+                                    <TextBlock Text="center map" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <maps:MapControl Grid.Row="1" Grid.ColumnSpan="2" x:Name="RoutesMapControl"
                                          MapServiceToken="FfbbvsO78DJRFC78YV5y~sb0TETdsQ4D_ob3F5fyZMA~AuctfqY8rW2lK7mv-CwsiLn9EAk63RXYSHV6LMtdYC8lxkymjB-2sujXcLGJFoBN" 
                                          Loaded="RoutesMapControl_Loaded"/>
                         </Grid>

@@ -44,7 +44,7 @@ namespace GetAroundAuckland.Services.SqlService
                                     var insertCmd = new MySqlCommand(insertSql, conn);
                                     insertCmd.Transaction = trans;
                                     model.SetMySqlParameters(insertCmd, "Insert");
-                                    insertCmd.ExecuteNonQuery();                                    
+                                    insertCmd.ExecuteNonQuery();
                                 }
                                 else
                                 {
@@ -173,7 +173,7 @@ namespace GetAroundAuckland.Services.SqlService
         public bool AddStopTimes(List<StopTime> stopTimes)
         {
             var stopWatch = new Stopwatch();
-            Logger.Info("Inserting Trips");
+            Logger.Info("Inserting Stop Times");
             stopWatch.Start();
 
             var result = Add(stopTimes, StopTime.SelectSql, StopTime.InsertSql, StopTime.UpdateSql);
@@ -196,6 +196,98 @@ namespace GetAroundAuckland.Services.SqlService
             Logger.Info("Finished Insert.");
             Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
             return result;
+        }
+
+        public bool PostProcessing()
+        {
+            var stopWatch = new Stopwatch();
+            Logger.Info("Post Processing");
+            stopWatch.Start();
+
+            using (var conn = new MySqlConnection(CONNECTION_STRING))
+            {
+                try
+                {
+                    conn.Open();
+
+                    var selectSql = "SELECT * FROM trips";
+                    var selectCmd = new MySqlCommand(selectSql, conn);
+                    var selectReader = selectCmd.ExecuteReader();
+                    var tripIds = new List<string>();
+
+                    while (selectReader.Read())
+                    {
+                        var tripId = selectReader.GetString(0).TrimEnd();
+                        tripIds.Add(tripId);
+                    }
+
+                    selectReader.Close();
+
+                    var stopSelectSql = "SELECT * FROM stop_times WHERE tripId = @0 ORDER BY StopSequence";
+                    var updateSql = "UPDATE trips SET FirstArrivalTime = @1, LastDepartureTime = @2 WHERE Id = @0";
+
+                    foreach (var id in tripIds)
+                    {
+                        var stopSelectCmd = new MySqlCommand(stopSelectSql, conn);
+                        stopSelectCmd.Parameters.Add(new MySqlParameter("@0", id));
+                        var stopSelectReader = stopSelectCmd.ExecuteReader();
+                        var arrivalTimes = new List<string>();
+                        var departureTimes = new List<string>();
+
+                        while (stopSelectReader.Read())
+                        {
+                            var arrival = stopSelectReader.GetString(1).TrimEnd();
+                            var departure = stopSelectReader.GetString(2).TrimEnd();
+                            arrivalTimes.Add(arrival);
+                            departureTimes.Add(departure);
+                        }
+
+                        stopSelectReader.Close();
+
+                        if (!(arrivalTimes.Any() && departureTimes.Any()))
+                            continue;
+
+                        var firstArrival = arrivalTimes.First();
+                        var lastDeparture = departureTimes.Last();
+
+                        var updateCmd = new MySqlCommand(updateSql, conn);
+                        updateCmd.Parameters.Add(new MySqlParameter("@0", id));
+                        updateCmd.Parameters.Add(new MySqlParameter("@1", firstArrival));
+                        updateCmd.Parameters.Add(new MySqlParameter("@2", lastDeparture));
+                        updateCmd.ExecuteNonQuery();                        
+                    }
+
+                    var updateIsLatestSql = @"SET SQL_SAFE_UPDATES = 0;
+                            UPDATE routes SET IsLatest = 0;
+                            UPDATE routes AS r
+                            JOIN 
+	                            (SELECT MAX(Id) AS Id FROM 
+		                            (SELECT Id, SUBSTRING_INDEX(Id,'-', 1) AS LeftId, SUBSTRING_INDEX(Id,'-', -1) AS RightId FROM routes
+		                            ORDER BY LeftId, RightId DESC
+		                            ) AS A1
+	                            GROUP BY LeftId) AS A2
+                            ON r.Id = A2.Id
+                            SET IsLatest = 1;
+                            SET SQL_SAFE_UPDATES = 1;
+                            ";
+                    var updateIsLatestCmd = new MySqlCommand(updateIsLatestSql, conn);
+                    updateIsLatestCmd.ExecuteNonQuery();
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                    return false;
+                }
+                finally
+                {
+                    conn.Close();
+                    stopWatch.Stop();
+                    Logger.Info("Finished Post Processing.");
+                    Logger.Info("Time Taken (ms): " + stopWatch.ElapsedMilliseconds);
+                }
+            }
         }
     }
 }

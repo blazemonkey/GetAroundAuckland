@@ -17,5 +17,6 @@ namespace GetAroundAuckland.Services.SqlService
         bool AddStops(List<Stop> stops);
         bool AddStopTimes(List<StopTime> stopTimes);
         bool AddTrips(List<Trip> trips);
+        bool PostProcessing();
     }
 }

@@ -1,0 +1,92 @@
+﻿<Page
+    x:Class="GetAroundAuckland.Windows10.UserControls.QuickViewStopUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GetAroundAuckland.Windows10.UserControls"
+    xmlns:converters="using:GetAroundAuckland.Windows10.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid x:Name="PopupGrid">
+        <Grid.Background>
+            <SolidColorBrush Color="Black" Opacity="0.7"/>
+        </Grid.Background>
+        <StackPanel Background="White" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="300"
+                    Height="Auto">
+            <StackPanel Background="Black"
+                        Width="300"
+                        Height="Auto">
+                <TextBlock Text="{Binding Stop.Code}"
+                           Margin="10"
+                           FontSize="14"
+                           Foreground="White"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Margin="10,10,10,0"
+                        HorizontalAlignment="Center" >
+                <!--<TextBlock Text="★" 
+                           Foreground="Black"
+                           FontWeight="Light"
+                           FontSize="18"
+                           TextWrapping="Wrap" 
+                           TextAlignment="Center" 
+                           Margin="0,0,2,0"
+                           Visibility="{Binding Directory.IsFavourites, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
+                <TextBlock Text="{Binding Stop.Name}" 
+                           Foreground="Black"
+                           FontWeight="Light"
+                           FontSize="14"
+                           TextWrapping="Wrap" 
+                           TextAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="10,0">
+                <TextBlock Text="sequence: " 
+                       Foreground="Gray"
+                       FontWeight="Light"
+                       FontSize="12"
+                       TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Sequence}" 
+                       Foreground="Gray"
+                       FontWeight="Light"
+                       FontSize="12"
+                       TextWrapping="Wrap" 
+                       TextAlignment="Center"
+                       Margin="2,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <Button x:Name="MoreDetailsButton"
+                        Content="more details"
+                        Background="Black"
+                        Foreground="White"
+                        HorizontalAlignment="Stretch"
+                        Width="Auto"
+                        FontSize="14"
+                        Margin="10"
+                        Tapped="MoreDetailsButton_Tapped">
+                </Button>
+                <Button x:Name="BackToMapButton"
+                        Content="back to map"
+                        Background="Black"
+                        Foreground="White"
+                        HorizontalAlignment="Stretch"
+                        Width="Auto"
+                        FontSize="14"
+                        Margin="10"
+                        Tapped="BackToMapButton_Tapped">
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

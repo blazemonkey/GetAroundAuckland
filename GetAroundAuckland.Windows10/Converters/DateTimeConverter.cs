@@ -15,10 +15,21 @@ namespace GetAroundAuckland.Windows10.Converters
                 return string.Empty;
 
             var content = value.ToString();
-            DateTime dateTime;
+            DateTime dateTime = DateTime.MinValue;
 
-            if (!DateTime.TryParseExact(content, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out dateTime))
-                return string.Empty;
+            var type = parameter.ToString();
+
+            if (type == "REST")
+            {
+                if (!DateTime.TryParseExact(content, "yyyy-MM-dd'T'HH:mm:ss.fff'Z'", null, System.Globalization.DateTimeStyles.None, out dateTime))
+                    return string.Empty;
+            }
+
+            if (type == "WEB")
+            {
+                if (!DateTime.TryParseExact(content, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out dateTime))
+                    return string.Empty;
+            }
 
             return dateTime.ToString("dddd, MMMM d, yyyy");
         }

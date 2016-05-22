@@ -13,6 +13,8 @@ using GetAroundAuckland.Windows10.Interfaces;
 using GetAroundAuckland.Windows10.ViewModels;
 using GetAroundAuckland.Windows10.Services.RestService;
 using Services.NavigationService;
+using GetAroundAuckland.Windows10.Services.AppDataService;
+using GetAroundAuckland.Windows10.Services.WebClientService;
 
 namespace GetAroundAuckland.Windows10
 {
@@ -21,7 +23,7 @@ namespace GetAroundAuckland.Windows10
     /// </summary>
     public sealed partial class App : PrismApplication
     {
-        public enum Experiences { Main, Route, Stop }
+        public enum Experiences { Startup, Main, Route, Stop, Settings }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -42,12 +44,17 @@ namespace GetAroundAuckland.Windows10
         {
             Container.RegisterInstance(NavigationService);
             Container.RegisterInstance<IMainPageViewModel>(new MainPageViewModel());
+            Container.RegisterInstance<ISettingsPageViewModel>(new SettingsPageViewModel());
+            Container.RegisterType<IAppDataService, AppDataService>();
             Container.RegisterType<IFileReaderService, FileReaderService>();
             Container.RegisterType<IJsonService, JsonService>();
             Container.RegisterType<IMessengerService, MessengerService>();
             Container.RegisterType<INavigationService, NavigationService>();
             Container.RegisterType<IRestService, RestService>();
             Container.RegisterType<ISqlService, SqlService>();
+            Container.RegisterType<IWebClientService, WebClientService>();
+
+            Container.Resolve<AppDataService>().InitializeAppDataContainer();
         }
 
         protected override object Resolve(Type type)
@@ -57,7 +64,7 @@ namespace GetAroundAuckland.Windows10
 
         protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
-            NavigationService.Navigate(Experiences.Main.ToString(), null);
+            NavigationService.Navigate(Experiences.Startup.ToString(), null);
             return Task.FromResult<object>(null);
         }
     }

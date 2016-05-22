@@ -128,12 +128,12 @@ namespace GetAroundAuckland.Models
             row.StartDate = reader.GetString(1).TrimEnd();
             row.EndDate = reader.GetString(2).TrimEnd();
             row.Monday = reader.GetBoolean(3);
-            row.Tuesday = reader.GetBoolean(3);
-            row.Wednesday = reader.GetBoolean(3);
-            row.Thursday = reader.GetBoolean(3);
-            row.Friday = reader.GetBoolean(3);
-            row.Saturday = reader.GetBoolean(3);
-            row.Sunday = reader.GetBoolean(3);
+            row.Tuesday = reader.GetBoolean(4);
+            row.Wednesday = reader.GetBoolean(5);
+            row.Thursday = reader.GetBoolean(6);
+            row.Friday = reader.GetBoolean(7);
+            row.Saturday = reader.GetBoolean(8);
+            row.Sunday = reader.GetBoolean(9);
 
             if (calendar.StartDate != row.StartDate || calendar.EndDate != row.EndDate || calendar.Monday != row.Monday || calendar.Tuesday != row.Tuesday || calendar.Wednesday != row.Wednesday 
                 || calendar.Thursday != row.Thursday || calendar.Friday != row.Friday || calendar.Saturday != row.Saturday || calendar.Sunday != row.Sunday)

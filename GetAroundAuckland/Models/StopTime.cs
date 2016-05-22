@@ -12,7 +12,7 @@ namespace GetAroundAuckland.Models
 {
     public class StopTime : DbModel
     {
-        public static string SelectSql = "SELECT * FROM stop_times WHERE TripId = @0 AND StopId = @1";
+        public static string SelectSql = "SELECT * FROM stop_times WHERE TripId = @0 AND StopSequence = @1";
         public static string InsertSql = "INSERT INTO stop_times(TripId, ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, PickupType, DropoffType, " + 
                                          "ShapeDistTravelled, CreatedTime, LastUpdatedTime) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10)";
         public static string UpdateSql = "UPDATE stop_times SET ArrivalTime = @2, DepartureTime = @3, StopId = @4, StopSequence = @5, StopHeadsign = @6, " + 
@@ -37,7 +37,7 @@ namespace GetAroundAuckland.Models
                 case "Select":
                     {
                         command.Parameters.Add(new SqlParameter("@0", TripId));
-                        command.Parameters.Add(new SqlParameter("@1", StopId));
+                        command.Parameters.Add(new SqlParameter("@1", StopSequence));
                         break;
                     }
                 case "Insert":
@@ -99,7 +99,7 @@ namespace GetAroundAuckland.Models
                 case "Select":
                     {
                         command.Parameters.Add(new MySqlParameter("@0", TripId));
-                        command.Parameters.Add(new MySqlParameter("@1", StopId));
+                        command.Parameters.Add(new MySqlParameter("@1", StopSequence));
                         break;
                     }
                 case "Insert":

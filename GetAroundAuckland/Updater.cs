@@ -53,23 +53,25 @@ namespace GetAroundAuckland
             //    return false;
             //}
 
-            var agencies = CsvService.Parse<Agency, AgencyMap>("gtfs\\agency.txt");
-            var calendars = CsvService.Parse<Calendar, CalendarMap>("gtfs\\calendar.txt");
-            var calendarDates = CsvService.Parse<CalendarDate, CalendarDateMap>("gtfs\\calendar_dates.txt");
-            var routes = CsvService.Parse<Route, RouteMap>("gtfs\\routes.txt");
-            var shapes = CsvService.Parse<Shape, ShapeMap>("gtfs\\shapes.txt");
-            var stops = CsvService.Parse<Stop, StopMap>("gtfs\\stops.txt");
-            var stopTimes = CsvService.Parse<StopTime, StopTimeMap>("gtfs\\stop_times.txt");
-            var trips = CsvService.Parse<Trip, TripMap>("gtfs\\trips.txt");
+            //var agencies = CsvService.Parse<Agency, AgencyMap>("gtfs\\agency.txt");
+            //var calendars = CsvService.Parse<Calendar, CalendarMap>("gtfs\\calendar.txt");
+            //var calendarDates = CsvService.Parse<CalendarDate, CalendarDateMap>("gtfs\\calendar_dates.txt");
+            //var routes = CsvService.Parse<Route, RouteMap>("gtfs\\routes.txt");
+            //var shapes = CsvService.Parse<Shape, ShapeMap>("gtfs\\shapes.txt");
+            //var stops = CsvService.Parse<Stop, StopMap>("gtfs\\stops.txt");
+            //var stopTimes = CsvService.Parse<StopTime, StopTimeMap>("gtfs\\stop_times.txt");
+            //var trips = CsvService.Parse<Trip, TripMap>("gtfs\\trips.txt");
 
-            SqlService.AddAgencies(agencies);
-            SqlService.AddCalendars(calendars);
-            SqlService.AddCalendarDates(calendarDates);
-            SqlService.AddRoutes(routes);
-            SqlService.AddShapes(shapes);
-            SqlService.AddStops(stops);
-            SqlService.AddStopTimes(stopTimes);
-            SqlService.AddTrips(trips);
+            //SqlService.AddAgencies(agencies);
+            //SqlService.AddCalendars(calendars);
+            //SqlService.AddCalendarDates(calendarDates);
+            //SqlService.AddRoutes(routes);
+            //SqlService.AddShapes(shapes);
+            //SqlService.AddStops(stops);
+            //SqlService.AddStopTimes(stopTimes);
+            //SqlService.AddTrips(trips);
+
+            SqlService.PostProcessing();
 
             return true;
         }

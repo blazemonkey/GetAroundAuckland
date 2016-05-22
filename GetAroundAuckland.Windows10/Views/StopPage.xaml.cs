@@ -20,7 +20,6 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Devices.Geolocation;
 using Windows.UI;
 using Windows.UI.Text;
-using GetAroundAuckland.Windows10.UserControls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,35 +28,27 @@ namespace GetAroundAuckland.Windows10.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class RoutePage : Page
+    public sealed partial class StopPage : Page
     {
-        private Popup _popup;
         private MapControl _mapControl;
+        private IStopPageViewModel _vm;
         public IMessengerService MessengerService { get; set; }
-        private IRoutePageViewModel _vm;
 
         private IEnumerable<Geopoint> _geopoints;
 
-        public RoutePage()
+        public StopPage()
         {
             this.InitializeComponent();
-            _vm = (IRoutePageViewModel)DataContext;
+            _vm = (IStopPageViewModel)DataContext;
             MessengerService = App.Container.Resolve<MessengerService>();
         }
-
-        private void RoutesMapControl_Loaded(object sender, RoutedEventArgs e)
+        private void StopsMapControl_Loaded(object sender, RoutedEventArgs e)
         {
             var map = (MapControl)sender;
-            //SetMapControl(map);
             _mapControl = map;
-            MessengerService.Register<IEnumerable<Shape>>(this, "DrawShapes", DrawShapes);
-            MessengerService.Register<IEnumerable<Stop>>(this, "DrawStops", DrawStops);
-            MessengerService.Register<bool>(this, "ReCenterMapRoute", ReCenterMap);
-            MessengerService.Register<bool>(this, "ShowStops", ShowStops);
+            MessengerService.Register<bool>(this, "ReCenterMapStop", ReCenterMap);
 
-            DrawShapes(_vm.GetShapes());
-            DrawStops(_vm.GetStops());
-            SetCenterOfPoints(_geopoints);
+            DrawStop(_vm.GetStop());
         }
 
         private void ReCenterMap(bool clear)
@@ -65,50 +56,32 @@ namespace GetAroundAuckland.Windows10.Views
             SetCenterOfPoints(_geopoints);
         }
 
-        private void ShowStops(bool show)
-        {
-            _mapControl.Children.Clear();
-
-            if (show)
-                DrawStops(_vm.GetStops());
-        }
-
-        private void DrawShapes(IEnumerable<Shape> shapes)
-        {
-            var polyline = new MapPolyline();
-            var posList = new List<BasicGeoposition>();
-            foreach (var shape in shapes)
-            {
-                posList.Add(new BasicGeoposition()
-                {
-                    Latitude = Convert.ToDouble(shape.Latitude),
-                    Longitude = Convert.ToDouble(shape.Longitude)
-                });
-            }
-
-            polyline.StrokeColor = Color.FromArgb(0xFF, 0x00, 0x97, 0xFF);
-            polyline.StrokeThickness = 4;
-            polyline.Path = new Geopath(posList);
-            _mapControl.MapElements.Add(polyline);
-        }
-
-        private void DrawStops(IEnumerable<Stop> stops)
+        private void DrawStop(Stop stop)
         {
             var geopoints = new List<Geopoint>();
             _mapControl.Children.Clear();
 
-            var stopsToDraw = stops.ToList();
-            for (var i = 0; i < stopsToDraw.Count(); i++)
-            {
-                var stop = stopsToDraw[i];
-                var centerPoint = DrawPointOnMap(stop, i + 1, stopsToDraw.Count());
-                geopoints.Add(centerPoint);
-            }
+            var centerPoint = DrawPointOnMap(stop);
+            geopoints.Add(centerPoint);
+            SetCenterOfPoints(geopoints);
 
             _geopoints = geopoints;
         }
 
-        private Geopoint DrawPointOnMap(Stop stop, int index, int total)
+        private void CenterMapStop(Stop stop)
+        {
+            var geopoints = new List<Geopoint>();
+
+            var basicGeoposition = new BasicGeoposition();
+            basicGeoposition.Latitude = Convert.ToDouble(stop.Latitude);
+            basicGeoposition.Longitude = Convert.ToDouble(stop.Longitude);
+            var geopoint = new Geopoint(basicGeoposition);
+
+            geopoints.Add(geopoint);
+            SetCenterOfPoints(geopoints);
+        }
+
+        private Geopoint DrawPointOnMap(Stop stop)
         {
             var center = new BasicGeoposition();
             center.Latitude = Convert.ToDouble(stop.Latitude);
@@ -119,7 +92,7 @@ namespace GetAroundAuckland.Windows10.Views
             {
                 FontWeight = FontWeights.Light,
                 FontSize = 10,
-                Text = index.ToString(),
+                Text = stop.Code.ToString(),
                 Foreground = new SolidColorBrush(Colors.White),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
@@ -128,24 +101,12 @@ namespace GetAroundAuckland.Windows10.Views
             var grid = new Grid
             {
                 Height = 15,
-                Width = 25,
+                Width = 45,
                 Margin = new Thickness(10),
+                Background = new SolidColorBrush(Colors.Black)
             };
 
-            if (index == 1)
-                grid.Background = new SolidColorBrush(Colors.Green);
-            else if (index == total)
-                grid.Background = new SolidColorBrush(Colors.Red);
-            else
-                grid.Background = new SolidColorBrush(Colors.Black);
-
-            var tag = new object[] { stop, index };
-
             grid.Children.Add(text);
-            grid.Tag = tag;
-            grid.Tapped -= Stop_Tapped;
-            grid.Tapped += Stop_Tapped;
-
             MapControl.SetLocation(grid, centerPoint);
             MapControl.SetNormalizedAnchorPoint(grid, new Point(0.5, 0.5));
             _mapControl.Children.Add(grid);
@@ -207,26 +168,6 @@ namespace GetAroundAuckland.Windows10.Views
             geoposition.Latitude = ((maxLatitude - minLatitude) / 2) + minLatitude;
             geoposition.Longitude = ((maxLongitude - minLongitude) / 2) + minLongitude;
             _mapControl.Center = new Geopoint(geoposition);
-        }
-
-        private void Stop_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var grid = sender as Grid;
-            var tag = grid.Tag as object[];
-
-            var stop = tag[0] as Stop;
-            var sequence = Convert.ToInt32(tag[1].ToString());
-
-            var quickView = new QuickViewStopUserControl(stop, sequence);
-            quickView.BackToMapButtonTapped += new EventHandler(BackToMapButton_Tapped);
-            _popup = new Popup();
-            _popup.Child = quickView;
-            _popup.IsOpen = true;
-        }
-
-        private void BackToMapButton_Tapped(object sender, EventArgs e)
-        {
-            _popup.IsOpen = false;
         }
     }
 }
